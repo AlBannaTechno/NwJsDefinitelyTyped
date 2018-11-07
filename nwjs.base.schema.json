@@ -1,0 +1,521 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "JSON schema for package.json files",
+  "definitions": {
+    "person": {
+      "type": [ "object", "string" ],
+      "required": [ "name" ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    },
+    "coreProperties": {
+      "type": "object",
+
+      "patternProperties": {
+        "^_": {
+          "description": "Any property starting with _ is valid.",
+          "additionalProperties": true,
+          "additionalItems": true
+        }
+      },
+
+      "properties": {
+        // ABT
+        "chromium-args":{
+          "title":" Specify chromium (content shell) command line arguments",
+          "description": "It will be useful if you want to distribute the app with some custom chromium args. For example, if you want to disable the GPU accelerated video display, just add \"chromium-args\" : \"--disable-accelerated-video\". If you want to add multiple arguments, separate each two arguments by space. This field can take a number of flags in one argument as well, via enclosing them in single quotation marks",
+          "type":"string",
+          "enum": ["--url=","--mixed-context","--nwapp","--user-data-dir=","--disable-devtools","--enable-node-worker","--disable-raf-throttling","--disable-cookie-encryption","--disable-crash-handler=true","--enable-gcm","--enable-transparent-visuals","--disable-transparency","--disable-gpu","--force-cpu-draw"]
+        },
+        "product_string":{
+          "description":"Use it to rename the Helper application under macOS.",
+          "type": "string"
+        },
+        "nodejs":{
+          "description": "set nodejs to false will disable Node support in NW.js.",
+          "type": "boolean"
+        },
+        "node-main":{
+          "description": " Specify the path to a node.js script file. And it will be executed on startup in Node context before the first DOM window load",
+          "type": "string"
+        },
+        "domain":{
+          "description": "Specify the host in the chrome-extension:// protocol URL used for the application. The web engine will share the same cookies between your application and the website under the same domain.",
+          "type": "string",
+          "format":"url"
+        },
+        "single-instance":{
+          "default": false,
+          "type": "boolean",
+          "description": " Specify whether to start up single instance of your app. It’s set to true by default. This property is deprecated since 0.13.0"
+        },
+        "bg-script":{
+          "description": " background script. The script is executed in the background page at the start of application.",
+          "type": "string"
+        },
+        "window":{
+          "type": "object",
+          "title": "controls how the window looks",
+          "description": " Most of window subfields are inherited by sub windows opened by window.open() or links (<a target=\"_blank\">) ",
+          "properties": {
+            "id":{
+              "description": "the id used to identify the window. This will be used to remember the size and position of the window and restore that geometry when a window with the same id is later opened",
+              "type":"string"
+            },
+            "title":{
+              "description": " the default title of window created by NW.js, it’s very useful if you want to show your own title when the app is starting.",
+              "type": "string"
+            },
+            "width":{
+              "description": " the initial width of the main window.",
+              "type": "integer"
+            },
+            "height":{
+              "description": " the initial height of the main window.",
+              "type": "integer"
+            },
+            "toolbar":{
+              "title": "should the navigation toolbar be showed.",
+              "description": "This property is deprecated since 0.13.0",
+              "type": "boolean"
+            },
+            "icon":{
+              "description": "path to window’s icon",
+              "type": "string"
+            },
+            "position":{
+              "description": "be null or center or mouse, controls where window will be put",
+              "type": "string",
+              "enum": ["null","center","mouse"]
+            },
+            "min_width":{
+              "description": "minimum width of window",
+              "type": "number"
+            },
+            "min_height":{
+              "description": "minimum height of window",
+              "type": "number"
+            },
+            "max_width":{
+              "description": "maximum width of window",
+              "type": "number"
+            },
+            "max_height":{
+              "description": "maximum height of window",
+              "type": "number"
+            },
+            "as_desktop":{
+              "title": "(Linux)",
+              "description": "show as desktop background window under X11 environment",
+              "type": "boolean"
+            },
+            "resizable":{
+              "title": "whether window is resizable",
+              "description": "Beware, if resizable is set to false on OS X and frame is set to true, the user will still be able to make the window fullscreen. Set fullscreen to false to disable the fullscreen control.",
+              "type": "boolean"
+            },
+            "always_on_top":{
+              "title": "whether the window should always stay on top of other windows.",
+              "description": "This feature is changed in 0.13.0",
+              "type": "boolean"
+            },
+            "visible_on_all_workspaces":{
+              "title": " whether the window should be visible on all workspaces simultaneously (on platforms that support multiple workspaces, currently Mac OS X and Linux).",
+              "description": "This feature is changed in 0.13.0",
+              "type": "boolean"
+            },
+            "fullscreen":{
+              "title": "whether window is fullscreen",
+              "description": "Beware, if frame is also set to false in fullscreen it will prevent the mouse from being captured on the very edges of the screen. You should avoid activate it if fullscreen is also set to true.",
+              "type": "boolean"
+            },
+            "show_in_taskbar":{
+              "title": "whether the window is shown in taskbar or dock",
+              "type": "boolean",
+              "default": true
+            },
+            "frame":{
+              "title": "specify it to false to make the window frameless",
+              "description": "Beware, if frame is set to false in fullscreen it will prevent the mouse from being captured on the very edges of the screen. You should avoid activate it if fullscreen is also set to true.",
+              "type": "boolean"
+            },
+            "show":{
+              "title": "specify it to false if you want your app to be hidden on startup",
+              "type": "boolean"
+            },
+            "kiosk":{
+              "title": "whether to use Kiosk mode",
+              "description": "Kiosk mode, the app will be fullscreen and try to prevent users from leaving the app, so you should remember to provide a way in app to leave Kiosk mode. This mode is mainly used for presentation on public displays",
+              "type": "boolean"
+            },
+            "transparent":{
+              "title": "whether to turn on transparent window mode",
+              "description": "Control the transparency with rgba background value in CSS. Use command line option --disable-transparency to disable this feature completely. , There is experimental support for “click-through” on the transparent region: add --disable-gpu option to the command line.",
+              "type": "boolean"
+            }
+
+          }
+        },
+        "webkit":{
+          "description": "controls what features of WebKit should be on/off",
+          "type": "object",
+          "properties": {
+            "double_tap_to_zoom_enabled":{
+              "title": "enable zooming with double tapping on mac with 2 fingers",
+              "type": "boolean",
+              "default": false
+            },
+            "plugin":{
+              "title": "whether to load external browser plugins like Flash",
+              "type": "boolean",
+              "default": true
+            }
+          }
+        },
+        "user-agent":{
+          "title": "Override the User-Agent header in HTTP requests made from the application.",
+          "type": "string",
+          "enum": ["%name","%ver","%nwver","%webkit_ver","%chromium_ver","%osinfo"]
+        },
+        "node-remote":{
+          "title": "This feature is changed in 0.13.0",
+          "type": ["array","string"],
+          "description": "enable calling Node in remote pages. The value controls for which sites this feature should be turned on. Each item in the array follows the match patterns used in Chrome extension   A match pattern is essentially a URL that begins with a permitted scheme (http, https, file, or ftp, and that can contain '*' characters. The special pattern <all_urls> matches any URL that starts with a permitted scheme. Each match pattern has 3 parts:   scheme — for example, http or file or *<hr/>host — for example, www.google.com or *.google.com or *; if the scheme is file, there is no host part<hr/>path —<hr/>for example, /*, /foo*, or /foo/bar. The path must bepresent in a host permission, but is always treated as /*."
+        },
+        "crash_report_url":{
+          "title": "URL of the crash report server",
+          "type": "string"
+        },
+        "js-flags":{
+          "title": "Specify the flags passed to JS engine (v8). e.g. turn on Harmony Proxies and Collections feature",
+          "description": "",
+          "type": "string"
+        },
+        "inject_js_start":{
+          "description": "The injecting JavaScript code is to be executed after any files from css, but before any other DOM is constructed or any other script is run",
+          "type": "string"
+        },
+        "inject_js_end":{
+          "description": "The injecting JavaScript code is to be executed after the document object is loaded, before onload event is fired. This is mainly to be used as an option of Window.open() to inject JS in a new window",
+          "type": "string"
+        },
+        "additional_trust_anchors":{
+          "title": "These certificates are used as additional root certificates for validation, to allow connecting to services using a self-signed certificate or certificates issued by custom CAs",
+          "description": " Containing a list of PEM-encoded certificates (i.e. \"-----BEGIN CERTIFICATE-----\n...certificate data...\n-----END CERTIFICATE-----\n\").",
+          "type": "array"
+        },
+        "dom_storage_quota":{
+          "title": "Number of mega bytes (MB) for the quota of the DOM storage. The suggestion is to put double the value you want.",
+          "type": "number"
+        },
+        "no-edit-menu":{
+          "title": "whether the default Edit menu should be disabled on Mac OS X",
+          "description": "This property is deprecated since 0.13.0",
+          "default": false
+        },
+        "name": {
+          "title": "Name of the package",
+          "type": "string",
+          "maxLength": 214,
+          "minLength": 1,
+          "pattern": "^\\S[A-z-0-9]"
+        },
+        "version": {
+          "title": "Version of the package",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description of the package",
+          "type": "string"
+        },
+        "keywords": {
+          "title": "Array of keyword strings",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "homepage": {
+          "title": "Url to the project homepage",
+          "type": "string",
+          "format": "uri"
+        },
+        "bugs": {
+          "title": "Project's issue tracker and/or email address",
+          "type": [ "object", "string" ],
+          "properties": {
+            "url": {
+              "type": "string",
+              "title": "The url to the project's issue tracker",
+              "format": "uri"
+            },
+            "email": {
+              "type": "string",
+              "title": "The email address to which issues should be reported",
+              "format": "email"
+            }
+          }
+        },
+        "license": {
+          "type": "string",
+          "title": "License of the project"
+        },
+        "licenses": {
+          "title": "Licenses of the project",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        },
+        "author": {
+          "title": "Author of package",
+          "type": [ "object", "string" ],
+          "required": [ "name" ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            }
+          }
+        },
+        "contributors": {
+          "title": "Contributors of the package",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/person"
+          }
+        },
+        "files": {
+          "title": "Files to include in the project",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "main": {
+          "title": "Entry module to the package",
+          "type": "string"
+        },
+        "jsnext:main": {
+          "title": "Entry module to the package, ES6 version",
+          "type": "string"
+        },
+        "bin": {
+          "title": "Executable files to install into PATH",
+          "type": [ "string", "object" ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "man": {
+          "title": "Documentation files for man",
+          "type": [ "array", "string" ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "directories": {
+          "title": "Structure of the package",
+          "type": "object",
+          "properties": {
+            "bin": {
+              "title": "Folder for binary files",
+              "type": "string"
+            },
+            "doc": {
+              "title": "Folder for markdown files",
+              "type": "string"
+            },
+            "example": {
+              "title": "Folder for example scripts",
+              "type": "string"
+            },
+            "lib": {
+              "title": "Folder where the bulk of your library is",
+              "type": "string"
+            },
+            "man": {
+              "title": "Folder that is full of man pages",
+              "type": "string"
+            },
+            "test": {
+              "title": "Folder for tests",
+              "type": "string"
+            }
+          }
+        },
+        "repository": {
+          "title": "Repository of code",
+          "type": ["object", "string"],
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "scripts": {
+          "title": "Commands to run at various times in the lifecycle of package",
+          "type": "object",
+          "properties": {
+            "prepublish":    {"type": "string", "title": "Run BEFORE the package is published. (Also run on local `npm install` without any arguments.)"},
+            "publish":       {"type": "string", "title": "Run AFTER the package is published"},
+            "postpublish":   {"type": "string", "title": "Run AFTER the package is published"},
+            "preinstall":    {"type": "string", "title": "Run BEFORE the package is installed"},
+            "install":       {"type": "string", "title": "Run AFTER the package is installed"},
+            "postinstall":   {"type": "string", "title": "Run AFTER the package is installed"},
+            "preuninstall":  {"type": "string", "title": "Run BEFORE the package is uninstalled"},
+            "uninstall":     {"type": "string", "title": "Run BEFORE the package is uninstalled"},
+            "postuninstall": {"type": "string", "title": "Run AFTER the package is uninstalled"},
+            "preversion":    {"type": "string", "title": "Run BEFORE bump the package version"},
+            "version":       {"type": "string", "title": "Run BEFORE bump the package version"},
+            "postversion":   {"type": "string", "title": "Run AFTER bump the package version"},
+            "pretest":       {"type": "string", "title": "Run by the `npm test` command"},
+            "test":          {"type": "string", "title": "Run by the `npm test` command"},
+            "posttest":      {"type": "string", "title": "Run by the `npm test` command"},
+            "prestop":       {"type": "string", "title": "Run by the `npm stop` command"},
+            "stop":          {"type": "string", "title": "Run by the `npm stop` command"},
+            "poststop":      {"type": "string", "title": "Run by the `npm stop` command"},
+            "prestart":      {"type": "string", "title": "Run by the `npm start` command"},
+            "start":         {"type": "string", "title": "Run by the `npm start` command"},
+            "poststart":     {"type": "string", "title": "Run by the `npm start` command"},
+            "prerestart":    {"type": "string", "title": "Run by the `npm restart` command. Note: npm restart will run the stop and start scripts if no restart script is provided"},
+            "restart":       {"type": "string", "title": "Run by the `npm restart` command. Note: npm restart will run the stop and start scripts if no restart script is provided"},
+            "postrestart":   {"type": "string", "title": "Run by the `npm restart` command. Note: npm restart will run the stop and start scripts if no restart script is provided"}
+          }
+        },
+        "config": {
+          "title": "Configuration parameters",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "dependencies": {
+          "title": "Dependencies of the package",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "devDependencies": {
+          "title": "Development dependencies of the package",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "bundleDependencies": {
+          "type": "array",
+          "title": "Dependencies bundled when publishing the package",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bundledDependencies": {
+          "type": "array",
+          "title": "Dependencies bundled when publishing the package",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optionalDependencies": {
+          "title": "Options dependencies of the package",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "peerDependencies": {
+          "title": "Peer dependencies of the package",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "engines": {
+          "title": "Compatible node and npm versions",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "engineStrict": {
+          "title": "Require compatible engines only",
+          "type": "boolean"
+        },
+        "os": {
+          "title": "Compatible operating systems",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cpu": {
+          "title": "Compatible CPU architectures",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preferGlobal": {
+          "title": "true, if global installation is preferred",
+          "type": "boolean"
+        },
+        "private": {
+          "title": "true, if package shouldn't be published",
+          "type": "boolean"
+        },
+        "publishConfig": {
+          "title": "Set of config values to use at publish-time",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "eslintConfig" : {
+          "$ref": "https://github.com/SchemaStore/schemastore/tree/master/src/schemas/json/eslintrc.json#"
+        },
+        "prettier": {
+          "$ref": "https://github.com/SchemaStore/schemastore/tree/master/src/schemas/json/prettierrc.json"
+        },
+        "stylelint" : {
+          "$ref": "https://jetbrains.com/stylelintrc.json#"
+        },
+        "jest" : {
+          "type": "object",
+          "$ref": "https://facebook.github.io/jest/docs/configuration.html#"
+        }
+      }
+    }
+  },
+  "allOf": [
+    { "$ref": "#/definitions/coreProperties" }
+  ]
+}
